@@ -154,9 +154,9 @@
 
         var str_color;
         /*Cadena para cambiar color*/
-        if( percent_round==100 && mf_available>66.66666666 ) {
+        if( percent_round==100 && pf_available>=51 ) {
             str_color = '<font style="color: lime;font-size: 10px">';
-        } else if( percent_round<=66.66666666 && percent_round>10 ) {
+        } else if( percent_round<=50 && percent_round>10 ) {
             str_color = '<font style="color: #ffa700;font-size: 10px">';
         } else {
             if( pf_available == 0 ) {
@@ -201,9 +201,9 @@
 
             var str_color;
             /*change color according to %*/
-            if( percent_round==100 && mf_available>66.66666666 ) {
+            if( percent_round==100 && mf_available>=51 ) {
                 str_color = '<font style="color: lime;font-size: 10px">';
-            } else if( percent_round<=66.66666666 && percent_round>10 ) {
+            } else if( percent_round<=50 && percent_round>10 ) {
                 str_color = '<font style="color: #ffa700;font-size: 10px">';
             } else {
                 if( mf_available == 0 )
