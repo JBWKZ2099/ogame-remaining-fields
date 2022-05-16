@@ -153,7 +153,7 @@
 
         var str_color;
         /*Cadena para cambiar color*/
-        if( percent_round==100 && percent_round>=51 ) {
+        if( percent_round<=100 && percent_round>=51 ) {
             str_color = '<font style="color: lime;font-size: 10px">'+(parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
         } else if( percent_round<=50 && percent_round>10 ) {
             str_color = '<font style="color: #ffa700;font-size: 10px">'+(parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
@@ -194,13 +194,9 @@
             percent = parseFloat( (mf_available/mf_available_two)*100 );
             percent_round = Math.round(percent*100)/100;
 
-            console.log( percent_round==100 && percent_round>=51 );
-            console.log( percent_round<=50 && percent_round>10 );
-            console.log( mf_available );
-
             str_color = "";
             /*change color according to %*/
-            if( percent_round==100 && percent_round>=51 ) {
+            if( percent_round<=100 && percent_round>=51 ) {
                 str_color = '<font style="color: lime;font-size: 10px">'+(parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
             } else if( percent_round<=50 && percent_round>10 ) {
                 str_color = '<font style="color: #ffa700;font-size: 10px">'+(parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
