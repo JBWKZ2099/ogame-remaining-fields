@@ -141,7 +141,6 @@
             pf_one = (planet_fields.split("overmark' >")[1]).split("</span")[0];
             pf_two = planet_fields.split("</span>/")[1];
 
-
             pf_available = pf_one - pf_two;
             pf_available_two = pf_two;
         } else {
@@ -154,16 +153,12 @@
 
         var str_color;
         /*Cadena para cambiar color*/
-        if( percent_round==100 && pf_available>=51 ) {
-            str_color = '<font style="color: lime;font-size: 10px">';
+        if( percent_round==100 && percent_round>=51 ) {
+            str_color = '<font style="color: lime;font-size: 10px">'+(parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
         } else if( percent_round<=50 && percent_round>10 ) {
-            str_color = '<font style="color: #ffa700;font-size: 10px">';
+            str_color = '<font style="color: #ffa700;font-size: 10px">'+(parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
         } else {
-            if( pf_available == 0 ) {
-                str_color = '<font style="color: red; font-size:10px">';
-            } else {
-                str_color = '<font style="color: red; font-size:10px">0';
-            }
+            str_color = '<font style="color: red; font-size:10px">'+(parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
         }
 
 
@@ -199,17 +194,18 @@
             percent = parseFloat( (mf_available/mf_available_two)*100 );
             percent_round = Math.round(percent*100)/100;
 
-            var str_color;
+            console.log( percent_round==100 && percent_round>=51 );
+            console.log( percent_round<=50 && percent_round>10 );
+            console.log( mf_available );
+
+            str_color = "";
             /*change color according to %*/
-            if( percent_round==100 && mf_available>=51 ) {
-                str_color = '<font style="color: lime;font-size: 10px">';
+            if( percent_round==100 && percent_round>=51 ) {
+                str_color = '<font style="color: lime;font-size: 10px">'+(parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
             } else if( percent_round<=50 && percent_round>10 ) {
-                str_color = '<font style="color: #ffa700;font-size: 10px">';
+                str_color = '<font style="color: #ffa700;font-size: 10px">'+(parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
             } else {
-                if( mf_available == 0 )
-                    str_color = '<font style="color: red; font-size:10px">';
-                else
-                    str_color = '<font style="color: red; font-size:10px">0';
+                str_color = '<font style="color: red; font-size:10px">'+(parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
             }
 
             var mf_available_str = '<font style="font-size:11px">[</font>'+ str_color + mf_available + '</font>'+'<font style="font-size:11px">/</font><font style="font-size:10px">'+mf_available_two+'</font><font style="font-size:11px">]</font>';
@@ -311,7 +307,7 @@
         $(this).attr("title", html_title);
         $(this).find(".planetlink").attr("title", html_title);
 
-    } );
+    });
 
 /* !SCRIPT */
 })();
