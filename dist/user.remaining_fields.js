@@ -116,7 +116,7 @@
     var attr_txt = [
         "<div class='htmlTooltip' style='width: 170px;'>",
         "<div class='htmlTooltip' style='width: 150px;'>",
-        `<h1>${lang.title_tooltip}</h1> <div class='splitLine'></div> <center> <table class='fleetinfo' cellpadding='0' cellspacing='0'> <tbody> <tr> <th colspan='1'> <p class='planet-name'>%planet_name%</p> </th>`,
+        `<h1>${lang.title_tooltip}</h1> <div class='splitLine'></div> <center> <table class='fleetinfo' cellpadding='0' cellspacing='0'> <tbody> %construction_var% <tr> <th colspan='1'> <p class='planet-name'>%planet_name%</p> </th>`,
         "</td></tr></tbody></table></center> </div>"
     ];
 
@@ -165,6 +165,7 @@
         var pf_available_str = '<font style="font-size:11px">[</font>'+ str_color + pf_available + '</font>'+'<font style="font-size:11px">/</font><font style="font-size:10px">'+pf_available_two+'</font><font style="font-size:11px">]</font>';
         var id_planet = ($(this).html().split("cp=")[1]).split('"')[0];
         var coord = ( ( $(this).html().split("[")[1] ).split("]")[0] ).split(":");
+        var html_construction = "";
 
 
         /*Comprueba si existe luna"></a>*/
@@ -287,6 +288,30 @@
                         <a href='${shortcuts[7] + id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>${attr_txt[3]}
             `;
 
+            if( $(this).find(".constructionIcon:not(.moon)").length>0 ) {
+                construction = $(this).find(".constructionIcon:not(.moon)").attr("title");
+                html_construction += `
+                    <td colspan='1' style='font-size:9px;text-align:left;'> <span class="icon12px icon_wrench"></span> ${construction} </td>
+                `;
+            } else {
+                html_construction += `
+                    <td colspan='1'></td>
+                `;
+            }
+
+            if( $(this).find(".constructionIcon.moon").length>0 ) {
+                construction = $(this).find(".constructionIcon.moon").attr("title");
+                html_construction += `
+                    <td colspan='2' style='font-size:9px;text-align:right;'> <span class="icon12px icon_wrench"></span> ${construction} </td>
+                `;
+            } else {
+                html_construction += `
+                    <td colspan='2'></td>
+                `;
+            }
+
+            html_title = html_title.replace("%construction_var%", html_construction);
+
             html_title = html_title.replace("%planet_name%", planet_info[1]).replace("%moon_name%", planet_info[2]);
 
             /*Muestra los campos disponibles en un Tooltip*/
@@ -294,7 +319,29 @@
             $(this).find(".moonlink").attr("title", html_title);
         } else {
             html_title = "";
-            html_title = attr_txt[1] + attr_txt[2] + "<td colspan='2'>" + pf_available_str + attr_txt[3] + "<center><a href='" + shortcuts[0] + id_planet + "'>"+lang.overview+"</a> <br><a href='" + shortcuts[9] + id_planet + "'>[+]</a><a href='" + shortcuts[1] + id_planet + "'>"+lang.resources+"</a> <br><a href='" + shortcuts[2] + id_planet + "'>"+lang.facilities+"</a> <br><a href='" + shortcuts[3] + id_planet + "'>"+lang.research+"</a> <br><a href='" + shortcuts[4] + id_planet + "'>"+lang.shipyard+"</a> <br><a href='" + shortcuts[5] + id_planet + "'>"+lang.defence+"</a> <br><a href='" + shortcuts[6] + id_planet + "'>"+lang.fleet+"</a> <br><a href='" + shortcuts[7] + id_planet + "&galaxy=" + coord[0] + "&system=" + coord[1] + "&position=" + coord[2] + "'>"+lang.galaxy+"</a>  <br></center>";
+            html_title = `
+                ${attr_txt[1]}
+                ${attr_txt[2]}
+                <td colspan='2'>${pf_available_str}${attr_txt[3]}
+                    <center>`;
+
+            html_title += `
+                        <a href='${shortcuts[0]}${id_planet}'>${lang.overview}</a> <br>
+                        <a href='${shortcuts[9]}${id_planet}'>[+]</a><a href='${shortcuts[1]}${id_planet}'>${lang.resources}</a> <br>
+                        <a href='${shortcuts[2]}${id_planet}'>${lang.facilities}</a> <br>
+                        <a href='${shortcuts[3]}${id_planet}'>${lang.research}</a> <br>
+                        <a href='${shortcuts[4]}${id_planet}'>${lang.shipyard}</a> <br>
+                        <a href='${shortcuts[5]}${id_planet}'>${lang.defence}</a> <br>
+                        <a href='${shortcuts[6]}${id_planet}'>${lang.fleet}</a> <br>
+                        <a href='${shortcuts[7]}${id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a> <br>
+                    </center>`;
+
+            if( $(this).find(".constructionIcon").length>0 ) {
+                html_construction += `<p style='font-size:9px;'><span class="icon12px icon_wrench"></span> ${$(this).find(".constructionIcon").attr("title")}</p>`;
+            }
+
+            html_title = html_title.replace("%construction_var%", html_construction);
+
             html_title = html_title.replace("%planet_name%", planet_info[1]);
             /*Muestra los campos disponibles en un Tooltip*/
             $(this).addClass("htmlTooltip tooltipRight tooltipClose");

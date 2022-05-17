@@ -28,6 +28,7 @@
 - Ahora el script detecta si hay Salto Cuántico en la luna
 - Ahora el tooltip muestra los nombres del planeta y luna
 - Colores semáforo de acuerdo al % de campos restantes
+- Ahora el tooltip muestra el nombre de las construcciones
 
 
 ## English
@@ -47,3 +48,4 @@
 - Now the script detects if moon has jumpgate
 - Now the tooltip displays planet and moon names
 - Traffic lights added according to % of remaining fields
+- Now the tooltip displays construction titles
