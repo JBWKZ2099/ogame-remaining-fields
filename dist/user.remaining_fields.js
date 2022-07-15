@@ -228,6 +228,9 @@
 
             var html_title = `
                 ${attr_txt[0]}${attr_txt[2]}
+                <span id="ncs-config" class="ncs-config">
+                    <img src="https://gf3.geo.gfsrv.net/cdne7/1f57d944fff38ee51d49c027f574ef.gif" width="16" height="16">
+                </span>
                 <th style='text-align:right;'>%moon_name%</th></tr>
                 <tr>
                     <td colspan='1'>${pf_available_str}</td>
@@ -282,7 +285,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <a href='${shortcuts[6] + id_planet}'>${lang.fleet}</a></td>
+                        <a href='${shortcuts[6] + id_planet}'>${lang.fleet}</a>
+                    </td>
                 </tr>
                 <tr>
                     <td>
