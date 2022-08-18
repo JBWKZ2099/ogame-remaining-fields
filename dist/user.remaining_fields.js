@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.1
+// @version         2.2
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -32,7 +32,7 @@
         "fleetdispatch",//6
         "galaxy",//7
         "opengate",//8
-        "resourceSettings" //9
+        "resourcesettings" //9
     ];
 
     var lang = Array();
@@ -110,7 +110,7 @@
         "https://"+uni+"-"+lang_server+url+pages[6]+"&cp=",
         "https://"+uni+"-"+lang_server+url+pages[7]+"&cp=",
         "https://"+uni+"-"+lang_server+url+pages[8]+"&cp=",
-        "https://"+uni+"-"+lang_server+url2+pages[9]+"&cp="
+        "https://"+uni+"-"+lang_server+url+pages[9]+"&cp=" /*Se actuaiza a la url para que se adapte a la versión 9 del juego (page=ingame&component=resourcesettings)*/
     ];
     //alert(shortcuts[0]);
 
