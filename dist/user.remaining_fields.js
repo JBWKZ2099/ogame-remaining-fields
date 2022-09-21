@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.2
+// @version         2.4
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -16,49 +16,49 @@
 (function () {
 /* START CRIPT */
 
+    var global_lf_checker = localStorage.getItem("lifeforms");
+
+    if( typeof global_lf_checker==="undefined" || global_lf_checker==null ) {
+        var lifeforms_checker = {};
+
+        if( $("#lifeform").length>0 )
+            lifeforms_checker["lifeforms"] = true;
+        else
+            lifeforms_checker["lifeforms"] = false;
+
+        localStorage.setItem("lifeforms", JSON.stringify(lifeforms_checker));
+    }
+
+    global_lf_checker = JSON.parse(localStorage.getItem("lifeforms")).lifeforms;
+
     // https://*.ogame.*/game/index.php?*
-    var lang_server = ( ( (document.location.href).split("//")[1] ).split(".ogame")[0] ).split("-")[1];
-    var uni = ( ( (document.location.href).split("//")[1] ).split(".ogame")[0] ).split("-")[0];
-    var url = ".ogame.gameforge.com/game/index.php?page=ingame&component=";
-    var url2 = ".ogame.gameforge.com/game/index.php?page=";
+    var lang_server = ( ( (document.location.href).split("//")[1] ).split(".ogame")[0] ).split("-")[1],
+        uni = ( ( (document.location.href).split("//")[1] ).split(".ogame")[0] ).split("-")[0],
+        url = ".ogame.gameforge.com/game/index.php?page=ingame&component=",
+        url2 = ".ogame.gameforge.com/game/index.php?page=",
+        pages = [
+            "overview", // 0
+            "supplies", // 1
+            "lfbuildings", // 2
+            "facilities", // 3
+            "research", // 4
+            "shipyard", // 5
+            "defenses", // 6
+            "fleetdispatch", // 7
+            "galaxy", // 8
+            "opengate", // 9
+            "resourcesettings" // 10
+        ],
+        lang = [];
 
-    var pages = [
-        "overview",//0
-        "supplies",//1
-        "facilities",//2
-        "research",//3
-        "shipyard",//4
-        "defenses",//5
-        "fleetdispatch",//6
-        "galaxy",//7
-        "opengate",//8
-        "resourcesettings" //9
-    ];
 
-    var lang = Array();
-
-
-    if( lang_server == "mx" ) {
+    if( lang_server=="mx" || lang_server=="es" ) {
         lang = {
             overview: "Resumen",
             resources: "Recursos",
+            lifeforms: "Formas de vida",
             research: "Investigación",
             facilities: "Estación",
-            shipyard: "Hangar",
-            defence: "Defensa",
-            fleet: "Flota",
-            galaxy: "Galaxia",
-            jumpgate: "Salto Cuántico",
-            title_tooltip: "Campos Restantes",
-            planet: "Planeta",
-            moon: "Luna"
-        };
-    } else if( lang_server == "es" ) {
-        lang = {
-            overview: "Resumen",
-            resources: "Recursos",
-            research: "Investigación",
-            facilities: "Instalaciones",
             shipyard: "Hangar",
             defence: "Defensa",
             fleet: "Flota",
@@ -72,6 +72,7 @@
         lang = {
             overview: "Overview",
             resources: "Resources",
+            lifeforms: "Life forms",
             research: "Research",
             facilities: "Facilities",
             shipyard: "Shipyard",
@@ -87,6 +88,7 @@
         lang = {
             overview: "Übersicht",
             resources: "Versorgung",
+            lifeforms: "Lebensformen",
             research: "Forschung",
             facilities: "Anlagen",
             shipyard: "Schiffswerft",
@@ -110,13 +112,14 @@
         "https://"+uni+"-"+lang_server+url+pages[6]+"&cp=",
         "https://"+uni+"-"+lang_server+url+pages[7]+"&cp=",
         "https://"+uni+"-"+lang_server+url+pages[8]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[9]+"&cp=" /*Se actuaiza a la url para que se adapte a la versión 9 del juego (page=ingame&component=resourcesettings)*/
+        "https://"+uni+"-"+lang_server+url+pages[9]+"&cp=",
+        "https://"+uni+"-"+lang_server+url+pages[10]+"&cp=" /*Se actuaiza a la url para que se adapte a la versión 9 del juego (page=ingame&component=resourcesettings)*/
     ];
     //alert(shortcuts[0]);
 
     var attr_txt = [
-        "<div class='htmlTooltip' style='width: 170px;'>",
-        "<div class='htmlTooltip' style='width: 150px;'>",
+        `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 170px;" )}'>`,
+        `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 150px;" )}'>`,
         `<h1>${lang.title_tooltip}</h1> <div class='splitLine'></div> <center> <table class='fleetinfo' cellpadding='0' cellspacing='0'> <tbody> %construction_var% <tr> <th colspan='1'> <p class='planet-name'>%planet_name%</p> </th>`,
         "</td></tr></tbody></table></center> </div>"
     ];
@@ -226,72 +229,148 @@
                 `;
             }
 
-            var html_title = `
-                ${attr_txt[0]}${attr_txt[2]}
-                <span id="ncs-config" class="ncs-config">
-                    <img src="https://gf3.geo.gfsrv.net/cdne7/1f57d944fff38ee51d49c027f574ef.gif" width="16" height="16">
-                </span>
-                <th style='text-align:right;'>%moon_name%</th></tr>
-                <tr>
-                    <td colspan='1'>${pf_available_str}</td>
-                    <td colspan='2' style='text-align:right;'>${mf_available_str}</td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href='${shortcuts[0] + id_planet}'>${lang.overview}</a>
-                    </td>
-                    <td class='value'>
-                        <a href='${shortcuts[1] + id_moon}'>${lang.resources}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href='${shortcuts[9] + id_planet}'>[+]</a>
-                        <a href='${shortcuts[1] + id_planet}'>${lang.resources}</a>
-                    </td>
-                    <td class='value'>
-                        <a href='${shortcuts[2] + id_moon}'>${lang.facilities}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href='${shortcuts[2] + id_planet}'>${lang.facilities}</a>
-                    </td>
-                    ${has_jumpgate}
-                </tr>
-                <tr>
-                    <td>
-                        <a href='${shortcuts[3] + id_planet}'>${lang.research}</a>
-                    </td>
-                    <td class='value'>
-                        <a href='${shortcuts[5] + id_moon}'>${lang.defence}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href='${shortcuts[4] + id_planet}'>${lang.shipyard}</a>
-                    </td>
-                    <td class='value'>
-                        <a href='${shortcuts[6] + id_moon}'>${lang.fleet}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href='${shortcuts[5] + id_planet}'>${lang.defence}</a>
-                    </td>
-                    <td class='value'>
-                        <a href='${shortcuts[7] + id_moon}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href='${shortcuts[6] + id_planet}'>${lang.fleet}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href='${shortcuts[7] + id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>${attr_txt[3]}
-            `;
+            if( !global_lf_checker ) {
+                var html_title = `
+                    ${attr_txt[0]}${attr_txt[2]}
+                    <span id="ncs-config" class="ncs-config" style="display: none !important;">
+                        <img src="https://gf3.geo.gfsrv.net/cdne7/1f57d944fff38ee51d49c027f574ef.gif" width="16" height="16">
+                    </span>
+                    <th style='text-align:right;'>%moon_name%</th></tr>
+                    <tr>
+                        <td colspan='1'>${pf_available_str}</td>
+                        <td colspan='2' style='text-align:right;'>${mf_available_str}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[0] + id_planet}'>${lang.overview}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[1] + id_moon}'>${lang.resources}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[9] + id_planet}'>[+]</a>
+                            <a href='${shortcuts[1] + id_planet}'>${lang.resources}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[2] + id_moon}'>${lang.facilities}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[2] + id_planet}'>${lang.facilities}</a>
+                        </td>
+                        ${has_jumpgate}
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[3] + id_planet}'>${lang.research}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[5] + id_moon}'>${lang.defence}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[4] + id_planet}'>${lang.shipyard}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[6] + id_moon}'>${lang.fleet}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[5] + id_planet}'>${lang.defence}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[7] + id_moon}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[6] + id_planet}'>${lang.fleet}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[7] + id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>${attr_txt[3]}
+                `;
+            } else {
+                var html_title = `
+                    ${attr_txt[0]}${attr_txt[2]}
+                    <span id="ncs-config" class="ncs-config" style="display: none !important;">
+                        <img src="https://gf3.geo.gfsrv.net/cdne7/1f57d944fff38ee51d49c027f574ef.gif" width="16" height="16">
+                    </span>
+                    <th style='text-align:right;'>%moon_name%</th></tr>
+                    <tr>
+                        <td colspan='1'>${pf_available_str}</td>
+                        <td colspan='2' style='text-align:right;'>${mf_available_str}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[0] + id_planet}'>${lang.overview}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[1] + id_moon}'>${lang.resources}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[9] + id_planet}'>[+]</a>
+                            <a href='${shortcuts[1] + id_planet}'>${lang.resources}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[3] + id_moon}'>${lang.facilities}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[2] + id_planet}'>${lang.lifeforms}</a>
+                        </td>
+                        ${has_jumpgate}
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[4] + id_planet}'>${lang.facilities}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[5] + id_moon}'>${lang.defence}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[5] + id_planet}'>${lang.research}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[6] + id_moon}'>${lang.fleet}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[6] + id_planet}'>${lang.shipyard}</a>
+                        </td>
+                        <td class='value'>
+                            <a href='${shortcuts[7] + id_moon}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[7] + id_planet}'>${lang.defence}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[8] + id_planet}'>${lang.fleet}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href='${shortcuts[9] + id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
+
+                    ${attr_txt[3]}
+                `;
+            }
 
             if( $(this).find(".constructionIcon:not(.moon)").length>0 ) {
                 construction = $(this).find(".constructionIcon:not(.moon)").attr("title");
@@ -320,7 +399,9 @@
             html_title = html_title.replace("%planet_name%", planet_info[1]).replace("%moon_name%", planet_info[2]);
 
             /*Muestra los campos disponibles en un Tooltip*/
-            $(this).addClass("htmlTooltip tooltipRight tooltipClose");
+            if( ogameInfinityChecker()===false )
+                $(this).addClass("htmlTooltip tooltipRight tooltipClose");
+
             $(this).find(".moonlink").attr("title", html_title);
         } else {
             html_title = "";
@@ -332,13 +413,22 @@
 
             html_title += `
                         <a href='${shortcuts[0]}${id_planet}'>${lang.overview}</a> <br>
-                        <a href='${shortcuts[9]}${id_planet}'>[+]</a><a href='${shortcuts[1]}${id_planet}'>${lang.resources}</a> <br>
-                        <a href='${shortcuts[2]}${id_planet}'>${lang.facilities}</a> <br>
-                        <a href='${shortcuts[3]}${id_planet}'>${lang.research}</a> <br>
-                        <a href='${shortcuts[4]}${id_planet}'>${lang.shipyard}</a> <br>
-                        <a href='${shortcuts[5]}${id_planet}'>${lang.defence}</a> <br>
-                        <a href='${shortcuts[6]}${id_planet}'>${lang.fleet}</a> <br>
-                        <a href='${shortcuts[7]}${id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a> <br>
+                        <a href='${shortcuts[10]}${id_planet}'>[+]</a>
+                        <a href='${shortcuts[1]}${id_planet}'>${lang.resources}</a> <br>`;
+
+            if( global_lf_checker ) {
+                html_title += `
+                        <a href='${shortcuts[2]}${id_planet}'>${lang.lifeforms}</a> <br>
+                `;
+            }
+
+            html_title += `
+                        <a href='${shortcuts[3]}${id_planet}'>${lang.facilities}</a> <br>
+                        <a href='${shortcuts[4]}${id_planet}'>${lang.research}</a> <br>
+                        <a href='${shortcuts[5]}${id_planet}'>${lang.shipyard}</a> <br>
+                        <a href='${shortcuts[6]}${id_planet}'>${lang.defence}</a> <br>
+                        <a href='${shortcuts[7]}${id_planet}'>${lang.fleet}</a> <br>
+                        <a href='${shortcuts[8]}${id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a> <br>
                     </center>`;
 
             if( $(this).find(".constructionIcon").length>0 ) {
@@ -352,9 +442,20 @@
             $(this).addClass("htmlTooltip tooltipRight tooltipClose");
         }
 
-        $(this).attr("title", html_title);
+        if( ogameInfinityChecker()===false )
+            $(this).attr("title", html_title);
+
         $(this).find(".planetlink").attr("title", html_title);
     });
+
+    function ogameInfinityChecker() {
+        var ogk = false;
+
+        if( JSON.parse(localStorage.getItem("ogk-data"))!=null )
+            ogk = true;
+
+        return ogk;
+    }
 
 /* !SCRIPT */
 })();
