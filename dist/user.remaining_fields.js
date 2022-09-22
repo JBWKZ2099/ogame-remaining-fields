@@ -218,7 +218,7 @@
             if( $(this).find("a.moonlink").attr("data-jumpgatelevel")!="0" ) {
                 has_jumpgate = `
                     <td class='value'>
-                        <a href='${shortcuts[2] + id_moon}&opengate=1'>${lang.jumpgate}</a>
+                        <a href='${shortcuts[3] + id_moon}&opengate=1'>${lang.jumpgate}</a>
                     </td>
                 `;
             } else {
@@ -250,51 +250,51 @@
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[9] + id_planet}'>[+]</a>
+                            <a href='${shortcuts[10] + id_planet}'>[+]</a>
                             <a href='${shortcuts[1] + id_planet}'>${lang.resources}</a>
                         </td>
                         <td class='value'>
-                            <a href='${shortcuts[2] + id_moon}'>${lang.facilities}</a>
+                            <a href='${shortcuts[3] + id_moon}'>${lang.facilities}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[2] + id_planet}'>${lang.facilities}</a>
+                            <a href='${shortcuts[3] + id_planet}'>${lang.facilities}</a>
                         </td>
                         ${has_jumpgate}
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[3] + id_planet}'>${lang.research}</a>
+                            <a href='${shortcuts[4] + id_planet}'>${lang.research}</a>
                         </td>
                         <td class='value'>
-                            <a href='${shortcuts[5] + id_moon}'>${lang.defence}</a>
+                            <a href='${shortcuts[6] + id_moon}'>${lang.defence}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[4] + id_planet}'>${lang.shipyard}</a>
+                            <a href='${shortcuts[5] + id_planet}'>${lang.shipyard}</a>
                         </td>
                         <td class='value'>
-                            <a href='${shortcuts[6] + id_moon}'>${lang.fleet}</a>
+                            <a href='${shortcuts[7] + id_moon}'>${lang.fleet}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[5] + id_planet}'>${lang.defence}</a>
+                            <a href='${shortcuts[6] + id_planet}'>${lang.defence}</a>
                         </td>
                         <td class='value'>
-                            <a href='${shortcuts[7] + id_moon}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
+                            <a href='${shortcuts[8] + id_moon}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[6] + id_planet}'>${lang.fleet}</a>
+                            <a href='${shortcuts[7] + id_planet}'>${lang.fleet}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[7] + id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>${attr_txt[3]}
+                            <a href='${shortcuts[8] + id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>${attr_txt[3]}
                 `;
             } else {
                 var html_title = `
