@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.4
+// @version         2.5
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -20,11 +20,10 @@
 
     if( typeof global_lf_checker==="undefined" || global_lf_checker==null ) {
         var lifeforms_checker = {};
+        lifeforms_checker["lifeforms"] = false;
 
         if( $("#lifeform").length>0 )
             lifeforms_checker["lifeforms"] = true;
-        else
-            lifeforms_checker["lifeforms"] = false;
 
         localStorage.setItem("lifeforms", JSON.stringify(lifeforms_checker));
     }
@@ -103,17 +102,17 @@
     }
 
     var shortcuts = [
-        "https://"+uni+"-"+lang_server+url+pages[0]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[1]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[2]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[3]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[4]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[5]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[6]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[7]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[8]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[9]+"&cp=",
-        "https://"+uni+"-"+lang_server+url+pages[10]+"&cp=" /*Se actuaiza a la url para que se adapte a la versión 9 del juego (page=ingame&component=resourcesettings)*/
+        `https://${uni}-${lang_server+url+pages[0]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[1]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[2]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[3]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[4]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[5]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[6]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[7]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[8]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[9]}&cp=`,
+        `https://${uni}-${lang_server+url+pages[10]}&cp=` /*Se actuaiza a la url para que se adapte a la versión 9 del juego (page=ingame&component=resourcesettings)*/
     ];
     //alert(shortcuts[0]);
 
@@ -127,101 +126,115 @@
 
     /*Main Operation*/
     $(".smallplanet").each( function(i, el) {
-        var planet_fields = (($(this).html()).split("km (")[1]).split(")<BR>")[0];
-        var pf_available, pf_available_two;
-        var planet_info = [];
+        var planet_fields = (($(this).html()).split("km (")[1]).split(")<BR>")[0],
+            pf_available, pf_available_two,
+            planet_info = [],
+            moon;
 
         planet_info[0] = $(el).find(".planet-koords").text();
         planet_info[1] = $(el).find(".planet-name").text();
 
         if( $(el).find(".moonlink").length>0 ) {
-            var moon = $(el).find(".moonlink").attr("title").split("<b>")[1].split(" [")[0];
+            moon = $(el).find(".moonlink").attr("title").split("<b>")[1].split(" [")[0];
             planet_info[2] = moon;
         }
 
         /*encontrar 'span' en la cadena de texto cuando no hay campos disponibles en el planeta*/
-        if( planet_fields.indexOf("span") == 1 ) {
+        pf_available = parseInt(planet_fields.split("/")[1].split(")")[0]) - parseInt(planet_fields.split("/")[0]);
+        pf_available_two = parseInt(planet_fields.split("/")[1].split(")")[0]);
+
+        if( planet_fields.indexOf("span")==1 ) {
             var pf_one, pf_two;
-            pf_one = (planet_fields.split("overmark' >")[1]).split("</span")[0];
-            pf_two = planet_fields.split("</span>/")[1];
+            pf_one = parseInt((planet_fields.split("overmark' >")[1]).split("</span")[0]);
+            pf_two = parseInt(planet_fields.split("</span>/")[1]);
 
             pf_available = pf_one - pf_two;
             pf_available_two = pf_two;
-        } else {
-            pf_available = planet_fields.split("/")[1].split(")")[0] - planet_fields.split("/")[0];
-            pf_available_two = planet_fields.split("/")[1].split(")")[0];
         }
 
-        var percent = parseFloat( (pf_available/pf_available_two)*100 );
-        var percent_round = Math.round(percent*100)/100;
+        if( planet_fields.indexOf("overmark' >")>-1 ) {
+            pf_available = parseInt(planet_fields.split("</span>/")[1].split(")")[0]) - parseInt(planet_fields.split("</span>/")[0].split("overmark' >")[1]);
+            pf_available_two = parseInt(planet_fields.split("</span>/")[1].split(")")[0]);
+        }
 
-        var str_color;
+        var percent = parseFloat( (pf_available/pf_available_two)*100 ),
+            percent_round = Math.round(percent*100)/100,
+            html_font = "",
+            color = "",
+            pf_val = (parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
+
         /*Cadena para cambiar color*/
-        if( percent_round<=100 && percent_round>=51 ) {
-            str_color = '<font style="color: lime;font-size: 10px">'+(parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
-        } else if( percent_round<=50 && percent_round>10 ) {
-            str_color = '<font style="color: #ffa700;font-size: 10px">'+(parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
-        } else {
-            str_color = '<font style="color: red; font-size:10px">'+(parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
-        }
+        color = "red";
+
+        if( percent_round<=100 && percent_round>=51 )
+            color = "lime";
+
+        if( percent_round<=50 && percent_round>10 )
+            color = "#ffa700";
+
+        str_color = `<font style="color: ${color}; font-size:10px">${pf_val}`;
 
 
-        var pf_available_str = '<font style="font-size:11px">[</font>'+ str_color + pf_available + '</font>'+'<font style="font-size:11px">/</font><font style="font-size:10px">'+pf_available_two+'</font><font style="font-size:11px">]</font>';
-        var id_planet = ($(this).html().split("cp=")[1]).split('"')[0];
-        var coord = ( ( $(this).html().split("[")[1] ).split("]")[0] ).split(":");
-        var html_construction = "";
+        var pf_available_str = '<font style="font-size:11px">[</font>'+ str_color + pf_available + '</font>'+'<font style="font-size:11px">/</font><font style="font-size:10px">'+pf_available_two+'</font><font style="font-size:11px">]</font>',
+            id_planet = ($(this).html().split("cp=")[1]).split('"')[0],
+            coord = ( ( $(this).html().split("[")[1] ).split("]")[0] ).split(":"),
+            html_construction = "";
 
 
         /*Comprueba si existe luna"></a>*/
         if( $(this).find("a.moonlink").length ) {
-            var moon_fields = (($(this).html()).split("km (")[2].split(")<br/>"))[0];
-            var mf_available, mf_available_two;
+            var moon_fields = (($(this).html()).split("km (")[2].split(")<br/>"))[0],
+                mf_available, mf_available_two;
 
             /*encontrar 'span' en la cadena de texto cuando no hay campos disponibles en la luna*/
             if( moon_fields.indexOf("span") == 1 ) {
-                var mf_one, mf_two;
-                mf_one = (moon_fields.split("overmark' >")[1]).split("</span")[0];
-                mf_two = moon_fields.split("</span>/")[1];
+                var mf_one, mf_two,
+                mf_one = parseInt((moon_fields.split("overmark' >")[1]).split("</span")[0]),
+                mf_two = parseInt(moon_fields.split("</span>/")[1]);
 
                 mf_available = mf_one - mf_two;
                 mf_available_two = mf_two;
                 //alert(mf_available_two);
             } else {
-                mf_available = moon_fields.split("/")[1] - moon_fields.split("/")[0];
-                mf_available_two = moon_fields.split("/")[1]
-                //alert(mf_available);
+                mf_available = parseInt(moon_fields.split("/")[1]) - parseInt(moon_fields.split("/")[0]);
+                mf_available_two = parseInt(moon_fields.split("/")[1]);
             }
 
             /* traffic lights colors according to % of remaining fields */
-
             percent = 0;
             percent_round = 0;
             percent = parseFloat( (mf_available/mf_available_two)*100 );
             percent_round = Math.round(percent*100)/100;
-
             str_color = "";
-            /*change color according to %*/
-            if( percent_round<=100 && percent_round>=51 ) {
-                str_color = '<font style="color: lime;font-size: 10px">'+(parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
-            } else if( percent_round<=50 && percent_round>10 ) {
-                str_color = '<font style="color: #ffa700;font-size: 10px">'+(parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
-            } else {
-                str_color = '<font style="color: red; font-size:10px">'+(parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
-            }
+            color = "red";
+            mf_available = (parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
 
-            var mf_available_str = '<font style="font-size:11px">[</font>'+ str_color + mf_available + '</font>'+'<font style="font-size:11px">/</font><font style="font-size:10px">'+mf_available_two+'</font><font style="font-size:11px">]</font>';
-            var id_moon = ( ($(this).html().split("moonlink")[1]).split("cp=")[1] ).split('&quot;')[0];
+            /*change color according to %*/
+            if( percent_round<=100 && percent_round>=51 )
+                str_color = "lime";
+
+            if( percent_round<=50 && percent_round>10 )
+                str_color = "#ffa700";
+
+            str_color = `<font style="color: ${color};font-size: 10px">${mf_available}`;
+
+            var mf_available_str = `
+                <font style="font-size:11px">[</font>${str_color + mf_available}</font>
+                <font style="font-size:11px">/</font><font style="font-size:10px">${mf_available_two}</font>
+                <font style="font-size:11px">]</font>`,
+                id_moon = ( ($(this).html().split("moonlink")[1]).split("cp=")[1] ).split('&quot;')[0];
+
             coord = ( ( ( $(this).html().split("moonlink")[1] ).split("[")[1] ).split("]")[0] ).split(":");
             var has_jumpgate = "";
 
             /* check if moon has jumpgate */
-            if( $(this).find("a.moonlink").attr("data-jumpgatelevel")!="0" ) {
-                has_jumpgate = `
-                    <td class='value'>
-                        <a href='${shortcuts[3] + id_moon}&opengate=1'>${lang.jumpgate}</a>
-                    </td>
-                `;
-            } else {
+            has_jumpgate = `
+                <td class='value'>
+                    <a href='${shortcuts[3] + id_moon}&opengate=1'>${lang.jumpgate}</a>
+                </td>
+            `;
+
+            if( !($(this).find("a.moonlink").attr("data-jumpgatelevel")!="0") ) {
                 has_jumpgate = `
                     <td class='value'>
                         <span style="opacity:0.55;">${lang.jumpgate}</span>
