@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.5
+// @version         2.5.1
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -117,12 +117,24 @@
     //alert(shortcuts[0]);
 
     var attr_txt = [
-        `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 170px;" )}'>`,
-        `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 150px;" )}'>`,
-        `<h1>${lang.title_tooltip}</h1> <div class='splitLine'></div> <center> <table class='fleetinfo' cellpadding='0' cellspacing='0'> <tbody> %construction_var% <tr> <th colspan='1'> <p class='planet-name'>%planet_name%</p> </th>`,
-        "</td></tr></tbody></table></center> </div>"
-    ];
+            `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 170px;" )}'>`,
+            `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 150px;" )}'>`,
+            `<h1>${lang.title_tooltip}</h1> <div class='splitLine'></div> <center> <table class="remaining-fields" cellpadding='0' cellspacing='0'> <tbody> %construction_var% <tr> <th colspan='1'> <p class='planet-name'>%planet_name%</p> </th>`,
+            "</td></tr></tbody></table></center> </div>"
+        ],
+        tbl_css = `
+            <style>
+                table.remaining-fields .rf-moon-link { text-align: right; }
+                table.remaining-fields { min-width: 130px; }
+                table.remaining-fields td,
+                table.remaining-fields th { text-align:left;}
+                table.remaining-fields th { font-weight:700; color:#848484 }
+                table.remaining-fields tr td,
+                table.remaining-fields tr th { padding: 2px 5px; }
+            </style>
+        `;
 
+    $("html head").append(tbl_css);
 
     /*Main Operation*/
     $(".smallplanet").each( function(i, el) {
@@ -229,14 +241,14 @@
 
             /* check if moon has jumpgate */
             has_jumpgate = `
-                <td class='value'>
+                <td class='value rf-moon-link'>
                     <a href='${shortcuts[3] + id_moon}&opengate=1'>${lang.jumpgate}</a>
                 </td>
             `;
 
             if( !($(this).find("a.moonlink").attr("data-jumpgatelevel")!="0") ) {
                 has_jumpgate = `
-                    <td class='value'>
+                    <td class='value rf-moon-link'>
                         <span style="opacity:0.55;">${lang.jumpgate}</span>
                     </td>
                 `;
@@ -257,7 +269,7 @@
                         <td>
                             <a href='${shortcuts[0] + id_planet}'>${lang.overview}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[1] + id_moon}'>${lang.resources}</a>
                         </td>
                     </tr>
@@ -266,7 +278,7 @@
                             <a href='${shortcuts[10] + id_planet}'>[+]</a>
                             <a href='${shortcuts[1] + id_planet}'>${lang.resources}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[3] + id_moon}'>${lang.facilities}</a>
                         </td>
                     </tr>
@@ -280,7 +292,7 @@
                         <td>
                             <a href='${shortcuts[4] + id_planet}'>${lang.research}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[6] + id_moon}'>${lang.defence}</a>
                         </td>
                     </tr>
@@ -288,7 +300,7 @@
                         <td>
                             <a href='${shortcuts[5] + id_planet}'>${lang.shipyard}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[7] + id_moon}'>${lang.fleet}</a>
                         </td>
                     </tr>
@@ -296,7 +308,7 @@
                         <td>
                             <a href='${shortcuts[6] + id_planet}'>${lang.defence}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[8] + id_moon}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
                         </td>
                     </tr>
@@ -324,7 +336,7 @@
                         <td>
                             <a href='${shortcuts[0] + id_planet}'>${lang.overview}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[1] + id_moon}'>${lang.resources}</a>
                         </td>
                     </tr>
@@ -333,7 +345,7 @@
                             <a href='${shortcuts[9] + id_planet}'>[+]</a>
                             <a href='${shortcuts[1] + id_planet}'>${lang.resources}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[3] + id_moon}'>${lang.facilities}</a>
                         </td>
                     </tr>
@@ -347,7 +359,7 @@
                         <td>
                             <a href='${shortcuts[4] + id_planet}'>${lang.facilities}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[5] + id_moon}'>${lang.defence}</a>
                         </td>
                     </tr>
@@ -355,7 +367,7 @@
                         <td>
                             <a href='${shortcuts[5] + id_planet}'>${lang.research}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[6] + id_moon}'>${lang.fleet}</a>
                         </td>
                     </tr>
@@ -363,7 +375,7 @@
                         <td>
                             <a href='${shortcuts[6] + id_planet}'>${lang.shipyard}</a>
                         </td>
-                        <td class='value'>
+                        <td class='value rf-moon-link'>
                             <a href='${shortcuts[7] + id_moon}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
                         </td>
                     </tr>
