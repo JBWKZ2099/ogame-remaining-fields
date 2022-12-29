@@ -276,8 +276,6 @@
                 `;
             }
 
-            debugger;
-
             if( !global_lf_checker ) {
                 var html_title = `
                     ${attr_txt[0]}${attr_txt[2]}
