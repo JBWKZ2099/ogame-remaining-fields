@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.5.1
+// @version         2.6
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -31,8 +31,9 @@
     global_lf_checker = JSON.parse(localStorage.getItem("lifeforms")).lifeforms;
 
     // https://*.ogame.*/game/index.php?*
-    var lang_server = ( ( (document.location.href).split("//")[1] ).split(".ogame")[0] ).split("-")[1],
-        uni = ( ( (document.location.href).split("//")[1] ).split(".ogame")[0] ).split("-")[0],
+    var theHref = window.location.href,
+        lang_server = /s(\d+)-(\w+)/.exec(theHref)[2],
+        uni = `s${/s(\d+)-(\w+)/.exec(theHref)[1]}`,
         url = ".ogame.gameforge.com/game/index.php?page=ingame&component=",
         url2 = ".ogame.gameforge.com/game/index.php?page=",
         pages = [
@@ -127,8 +128,9 @@
                 table.remaining-fields .rf-moon-link { text-align: right; }
                 table.remaining-fields { min-width: 130px; }
                 table.remaining-fields td,
-                table.remaining-fields th { text-align:left;}
-                table.remaining-fields th { font-weight:700; color:#848484 }
+                table.remaining-fields th { text-align:left; }
+                table.remaining-fields th { font-weight:700; color:#848484; }
+                .planet-info, .moon-info { color: #848484; }
                 table.remaining-fields tr td,
                 table.remaining-fields tr th { padding: 2px 5px; }
             </style>
@@ -138,10 +140,16 @@
 
     /*Main Operation*/
     $(".smallplanet").each( function(i, el) {
-        var planet_fields = (($(this).html()).split("km (")[1]).split(")<BR>")[0],
-            pf_available, pf_available_two,
+        var planet_fields = $(this).find(".planetlink").attr("title").replace("</span>", "").replace("<span class='overmark' >","").replace("<span class='overmark'>",""),
+            pf_used = parseInt(/\(([^)]+)\)/.exec( $(this).html() )[1].split("/")[0]),
+            pf_all = parseInt(/\(([^)]+)\)/.exec( $(this).html() )[1].split("/")[1]),
+            pf_available = pf_all - pf_used,
             planet_info = [],
+            plinfo = $.parseHTML($(this).find(".planetlink").attr("title")),
+            planet_size = (plinfo[2].textContent).split(" (")[0],
+            planet_temp = plinfo[4].textContent,
             moon;
+
 
         planet_info[0] = $(el).find(".planet-koords").text();
         planet_info[1] = $(el).find(".planet-name").text();
@@ -151,89 +159,103 @@
             planet_info[2] = moon;
         }
 
-        /*encontrar 'span' en la cadena de texto cuando no hay campos disponibles en el planeta*/
-        pf_available = parseInt(planet_fields.split("/")[1].split(")")[0]) - parseInt(planet_fields.split("/")[0]);
-        pf_available_two = parseInt(planet_fields.split("/")[1].split(")")[0]);
-
-        if( planet_fields.indexOf("span")==1 ) {
-            var pf_one, pf_two;
-            pf_one = parseInt((planet_fields.split("overmark' >")[1]).split("</span")[0]);
-            pf_two = parseInt(planet_fields.split("</span>/")[1]);
-
-            pf_available = pf_one - pf_two;
-            pf_available_two = pf_two;
-        }
-
-        if( planet_fields.indexOf("overmark' >")>-1 ) {
-            pf_available = parseInt(planet_fields.split("</span>/")[1].split(")")[0]) - parseInt(planet_fields.split("</span>/")[0].split("overmark' >")[1]);
-            pf_available_two = parseInt(planet_fields.split("</span>/")[1].split(")")[0]);
-        }
-
-        var percent = parseFloat( (pf_available/pf_available_two)*100 ),
+        var percent = parseFloat( (pf_used/pf_all)*100 ),
             percent_round = Math.round(percent*100)/100,
             html_font = "",
             color = "",
             pf_val = (parseInt(pf_available)<10 || parseInt(pf_available)==0 ? 0 : "");
 
-        /*Cadena para cambiar color*/
-        color = "red";
+        if( percent_round<=100 && percent_round>=91 )
+            color = "red"; /* red */
 
-        if( percent_round<=100 && percent_round>=51 )
-            color = "lime";
+        if( percent_round<=90 && percent_round>=81 )
+            color = "#FF4900";
 
-        if( percent_round<=50 && percent_round>10 )
-            color = "#ffa700";
+        if( percent_round<=80 && percent_round>=71 )
+            color = "#FF8D00";
+
+        if( percent_round<=70 && percent_round>=61 )
+            color = "#FFC400";
+
+        if( percent_round<=60 && percent_round>=51 )
+            color = "#FFFC00";
+
+        if( percent_round<=50 && percent_round>=41 )
+            color = "#C9FF00";
+
+        if( percent_round<=40 && percent_round>=31 )
+            color = "#95FF00";
+
+        if( percent_round<=30 && percent_round>=21 )
+            color = "#6BFF00";
+
+        if( percent_round<=20 && percent_round>=11 )
+            color = "#40FF00";
+
+        if( percent_round<=10 && percent_round>=0 )
+            color = "lime"; /* Green */
+
 
         str_color = `<font style="color: ${color}; font-size:10px">${pf_val}`;
 
 
-        var pf_available_str = '<font style="font-size:11px">[</font>'+ str_color + pf_available + '</font>'+'<font style="font-size:11px">/</font><font style="font-size:10px">'+pf_available_two+'</font><font style="font-size:11px">]</font>',
-            id_planet = ($(this).html().split("cp=")[1]).split('"')[0],
-            coord = ( ( $(this).html().split("[")[1] ).split("]")[0] ).split(":"),
+        var pf_available_str = '<font style="font-size:11px">[</font>'+ str_color + pf_available + '</font>'+'<font style="font-size:11px">/</font><font style="font-size:10px">'+pf_all+'</font><font style="font-size:11px">]</font>',
+            id_planet = $(this).attr("id").split("-")[1],
+            coord = ( /\[([^)]+)\]/.exec( $(this).html() )[1] ).split(":"),
             html_construction = "";
 
 
         /*Comprueba si existe luna"></a>*/
         if( $(this).find("a.moonlink").length ) {
-            var moon_fields = (($(this).html()).split("km (")[2].split(")<br/>"))[0],
-                mf_available, mf_available_two;
-
-            /*encontrar 'span' en la cadena de texto cuando no hay campos disponibles en la luna*/
-            if( moon_fields.indexOf("span") == 1 ) {
-                var mf_one, mf_two,
-                mf_one = parseInt((moon_fields.split("overmark' >")[1]).split("</span")[0]),
-                mf_two = parseInt(moon_fields.split("</span>/")[1]);
-
-                mf_available = mf_one - mf_two;
-                mf_available_two = mf_two;
-                //alert(mf_available_two);
-            } else {
-                mf_available = parseInt(moon_fields.split("/")[1]) - parseInt(moon_fields.split("/")[0]);
-                mf_available_two = parseInt(moon_fields.split("/")[1]);
-            }
+            var moon_fields = $(this).find("a.moonlink").attr("title").replace("</span>", "").replace("<span class='overmark' >","").replace("<span class='overmark'>",""),
+                mf_used = parseInt( /\(([^)]+)\)/.exec( moon_fields )[1].split("/")[0] ),
+                mf_all = parseInt( /\(([^)]+)\)/.exec( moon_fields )[1].split("/")[1] ),
+                mf_available = mf_all - mf_used,
+                moon_size = ($( $.parseHTML($(this).find("a.moonlink").attr("title")) )[2].textContent).split("(",)[0].replace(" ", ""); /*Get the Moon Size*/
 
             /* traffic lights colors according to % of remaining fields */
             percent = 0;
             percent_round = 0;
-            percent = parseFloat( (mf_available/mf_available_two)*100 );
+            percent = parseFloat( (mf_used/mf_all)*100 );
             percent_round = Math.round(percent*100)/100;
             str_color = "";
             color = "red";
-            mf_available = (parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
+            // mf_available = (parseInt(mf_available)<10 || parseInt(mf_available)==0 ? 0 : "");
 
-            /*change color according to %*/
-            if( percent_round<=100 && percent_round>=51 )
-                str_color = "lime";
+            if( percent_round<=100 && percent_round>=91 )
+                color = "red"; /* red */
 
-            if( percent_round<=50 && percent_round>10 )
-                str_color = "#ffa700";
+            if( percent_round<=90 && percent_round>=81 )
+                color = "#FF4900";
+
+            if( percent_round<=80 && percent_round>=71 )
+                color = "#FF8D00";
+
+            if( percent_round<=70 && percent_round>=61 )
+                color = "#FFC400";
+
+            if( percent_round<=60 && percent_round>=51 )
+                color = "#FFFC00";
+
+            if( percent_round<=50 && percent_round>=41 )
+                color = "#C9FF00";
+
+            if( percent_round<=40 && percent_round>=31 )
+                color = "#95FF00";
+
+            if( percent_round<=30 && percent_round>=21 )
+                color = "#6BFF00";
+
+            if( percent_round<=20 && percent_round>=11 )
+                color = "#40FF00";
+
+            if( percent_round<=10 && percent_round>=0 )
+                color = "lime"; /* Green */
 
             str_color = `<font style="color: ${color};font-size: 10px">${mf_available}`;
 
             var mf_available_str = `
-                <font style="font-size:11px">[</font>${str_color + mf_available}</font>
-                <font style="font-size:11px">/</font><font style="font-size:10px">${mf_available_two}</font>
-                <font style="font-size:11px">]</font>`,
+                <font style="font-size:11px">[</font>${str_color}</font><font style="font-size:11px">/</font><font style="font-size:10px">${mf_all}</font><font style="font-size:11px">]</font>`,
                 id_moon = ( ($(this).html().split("moonlink")[1]).split("cp=")[1] ).split('&quot;')[0];
 
             coord = ( ( ( $(this).html().split("moonlink")[1] ).split("[")[1] ).split("]")[0] ).split(":");
@@ -254,6 +276,8 @@
                 `;
             }
 
+            debugger;
+
             if( !global_lf_checker ) {
                 var html_title = `
                     ${attr_txt[0]}${attr_txt[2]}
@@ -261,6 +285,22 @@
                         <img src="https://gf3.geo.gfsrv.net/cdne7/1f57d944fff38ee51d49c027f574ef.gif" width="16" height="16">
                     </span>
                     <th style='text-align:right;'>%moon_name%</th></tr>
+
+                    <tr>
+                        <td>
+                            <p class="planet-info">${planet_size}</p>
+                        </td>
+                        <td class="rf-moon-link">
+                            <p class="planet-info">${moon_size}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="planet-info">${planet_temp}</p>
+                        </td>
+                        <td></td>
+                    </tr>
+
                     <tr>
                         <td colspan='1'>${pf_available_str}</td>
                         <td colspan='2' style='text-align:right;'>${mf_available_str}</td>
@@ -328,6 +368,22 @@
                         <img src="https://gf3.geo.gfsrv.net/cdne7/1f57d944fff38ee51d49c027f574ef.gif" width="16" height="16">
                     </span>
                     <th style='text-align:right;'>%moon_name%</th></tr>
+
+                    <tr>
+                        <td>
+                            <p class="planet-info">${planet_size}</p>
+                        </td>
+                        <td class="rf-moon-link">
+                            <p class="planet-info">${moon_size}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="planet-info">${planet_temp}</p>
+                        </td>
+                        <td></td>
+                    </tr>
+
                     <tr>
                         <td colspan='1'>${pf_available_str}</td>
                         <td colspan='2' style='text-align:right;'>${mf_available_str}</td>
@@ -434,7 +490,9 @@
                 ${attr_txt[1]}
                 ${attr_txt[2]}
                 <td colspan='2'>${pf_available_str}${attr_txt[3]}
-                    <center>`;
+                    <center>
+                        <p class="planet-info">${planet_size}</p>
+                        <p class="planet-info">${planet_temp}</p>`;
 
             html_title += `
                         <a href='${shortcuts[0]}${id_planet}'>${lang.overview}</a> <br>
