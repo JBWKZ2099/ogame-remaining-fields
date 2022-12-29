@@ -118,7 +118,7 @@
     //alert(shortcuts[0]);
 
     var attr_txt = [
-            `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 170px;" )}'>`,
+            `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 200px;" )}'>`,
             `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 150px;" )}'>`,
             `<h1>${lang.title_tooltip}</h1> <div class='splitLine'></div> <center> <table class="remaining-fields" cellpadding='0' cellspacing='0'> <tbody> %construction_var% <tr> <th colspan='1'> <p class='planet-name'>%planet_name%</p> </th>`,
             "</td></tr></tbody></table></center> </div>"
