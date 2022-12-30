@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.6
+// @version         2.6.1
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -293,7 +293,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td style='text-align:center;'>
                             <p class="planet-info">${planet_temp}</p>
                         </td>
                         <td></td>
@@ -376,7 +376,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td style='text-align:center;'>
                             <p class="planet-info">${planet_temp}</p>
                         </td>
                         <td></td>
