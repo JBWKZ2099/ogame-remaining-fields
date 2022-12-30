@@ -18,7 +18,7 @@
 
     var global_lf_checker = localStorage.getItem("lifeforms");
 
-    if( typeof global_lf_checker==="undefined" || global_lf_checker==null ) {
+    if( typeof global_lf_checker==="undefined" || global_lf_checker==null || JSON.parse(global_lf_checker).lifeforms==false ) {
         var lifeforms_checker = {};
         lifeforms_checker["lifeforms"] = false;
 
