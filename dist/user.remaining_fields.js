@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.6.2
+// @version         2.6.3
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -16,19 +16,20 @@
 (function () {
 /* START CRIPT */
 
-    var global_lf_checker = localStorage.getItem("lifeforms");
+    var uni = `s${(/s(\d+)-(\w+)/.exec(window.location.href)[1])}`;
+    var global_lf_checker = localStorage.getItem(`${uni}_lifeforms`);
 
-    if( typeof global_lf_checker==="undefined" || global_lf_checker==null || JSON.parse(global_lf_checker).lifeforms==false ) {
+    if( typeof global_lf_checker==="undefined" || global_lf_checker==null ) {
         var lifeforms_checker = {};
         lifeforms_checker["lifeforms"] = false;
 
         if( $("#lifeform").length>0 )
             lifeforms_checker["lifeforms"] = true;
 
-        localStorage.setItem("lifeforms", JSON.stringify(lifeforms_checker));
+        localStorage.setItem(`${uni}_lifeforms`, JSON.stringify(lifeforms_checker));
     }
 
-    global_lf_checker = JSON.parse(localStorage.getItem("lifeforms")).lifeforms;
+    global_lf_checker = JSON.parse(localStorage.getItem(`${uni}_lifeforms`)).lifeforms;
 
     // https://*.ogame.*/game/index.php?*
     var theHref = window.location.href,
@@ -313,7 +314,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style='text-align:center;'>
+                        <td>
                             <p class="planet-info">${planet_temp}</p>
                         </td>
                         <td></td>
@@ -396,7 +397,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style='text-align:center;'>
+                        <td>
                             <p class="planet-info">${planet_temp}</p>
                         </td>
                         <td></td>
