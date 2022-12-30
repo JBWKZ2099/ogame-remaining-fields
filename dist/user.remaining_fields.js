@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.6.1
+// @version         2.6.2
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -120,7 +120,7 @@
     var attr_txt = [
             `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 200px;" )}'>`,
             `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 150px;" )}'>`,
-            `<h1>${lang.title_tooltip}</h1> <div class='splitLine'></div> <center> <table class="remaining-fields" cellpadding='0' cellspacing='0'> <tbody> %construction_var% <tr> <th colspan='1'> <p class='planet-name'>%planet_name%</p> </th>`,
+            `<h1>${lang.title_tooltip}</h1> <div class='splitLine'></div> <center> <table class="remaining-fields" cellpadding='0' cellspacing='0'> <tbody> %construction_var% <tr> %lifeform_name% <th colspan='1'> <p class='planet-name'>%planet_name%</p> </th>`,
             "</td></tr></tbody></table></center> </div>"
         ],
         tbl_css = `
@@ -148,8 +148,28 @@
             plinfo = $.parseHTML($(this).find(".planetlink").attr("title")),
             planet_size = (plinfo[2].textContent).split(" (")[0],
             planet_temp = plinfo[4].textContent,
-            moon;
+            moon,
+            lifeform_name = "",
+            lifeforms = false;
 
+
+        if( global_lf_checker ) {
+            lifeforms = true;
+
+            if( !planet_size.indexOf("km")>-1 )
+                planet_size = (plinfo[4].textContent).split(" (")[0];
+
+            if( !planet_temp.indexOf("°C")>-1 )
+                planet_temp = plinfo[6].textContent;
+
+
+            lifeform_name = `
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        <p class="planet-info">${plinfo[2].textContent}</p>
+                    </td>
+                </tr>`;
+        }
 
         planet_info[0] = $(el).find(".planet-koords").text();
         planet_info[1] = $(el).find(".planet-name").text();
@@ -458,7 +478,7 @@
                 `;
             } else {
                 html_construction += `
-                    <td colspan='1'></td>
+                    <td colspan='1' style="display:none;"></td>
                 `;
             }
 
@@ -469,13 +489,13 @@
                 `;
             } else {
                 html_construction += `
-                    <td colspan='2'></td>
+                    <td colspan='2' style="display:none;"></td>
                 `;
             }
 
             html_title = html_title.replace("%construction_var%", html_construction);
-
             html_title = html_title.replace("%planet_name%", planet_info[1]).replace("%moon_name%", planet_info[2]);
+            html_title = html_title.replace("%lifeform_name%", lifeform_name);
 
             /*Muestra los campos disponibles en un Tooltip*/
             if( ogameInfinityChecker()===false )
@@ -489,6 +509,7 @@
                 ${attr_txt[2]}
                 <td colspan='2'>${pf_available_str}${attr_txt[3]}
                     <center>
+                        <p class="planet-info" style="${( global_lf_checker ? "" : "display:none;"  )}">${plinfo[2].textContent}</p>
                         <p class="planet-info">${planet_size}</p>
                         <p class="planet-info">${planet_temp}</p>`;
 
