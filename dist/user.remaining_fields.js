@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.6.3
+// @version         2.6.4
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -432,41 +432,41 @@
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[4] + id_planet}'>${lang.facilities}</a>
+                            <a href='${shortcuts[3] + id_planet}'>${lang.facilities}</a>
                         </td>
                         <td class='value rf-moon-link'>
-                            <a href='${shortcuts[5] + id_moon}'>${lang.defence}</a>
+                            <a href='${shortcuts[6] + id_moon}'>${lang.defence}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[5] + id_planet}'>${lang.research}</a>
+                            <a href='${shortcuts[4] + id_planet}'>${lang.research}</a>
                         </td>
                         <td class='value rf-moon-link'>
-                            <a href='${shortcuts[6] + id_moon}'>${lang.fleet}</a>
+                            <a href='${shortcuts[7] + id_moon}'>${lang.fleet}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[6] + id_planet}'>${lang.shipyard}</a>
+                            <a href='${shortcuts[5] + id_planet}'>${lang.shipyard}</a>
                         </td>
                         <td class='value rf-moon-link'>
-                            <a href='${shortcuts[7] + id_moon}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
+                            <a href='${shortcuts[8] + id_moon}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[7] + id_planet}'>${lang.defence}</a>
+                            <a href='${shortcuts[6] + id_planet}'>${lang.defence}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[8] + id_planet}'>${lang.fleet}</a>
+                            <a href='${shortcuts[7] + id_planet}'>${lang.fleet}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[9] + id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
+                            <a href='${shortcuts[8] + id_planet}&galaxy=${coord[0]}&system=${coord[1]}&position=${coord[2]}'>${lang.galaxy}</a>
 
                     ${attr_txt[3]}
                 `;
