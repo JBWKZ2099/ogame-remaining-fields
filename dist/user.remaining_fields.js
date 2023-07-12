@@ -53,7 +53,7 @@
         lang = [];
 
 
-    if( lang_server=="mx" || lang_server=="es" ) {
+    if( lang_server=="mx" || lang_server=="es" || lang_server=="ar" ) {
         lang = {
             overview: "Resumen",
             resources: "Recursos",
@@ -68,22 +68,6 @@
             title_tooltip: "Campos Restantes",
             planet: "Planeta",
             moon: "Luna"
-        };
-    } else if( lang_server == "en" ) {
-        lang = {
-            overview: "Overview",
-            resources: "Resources",
-            lifeforms: "Life forms",
-            research: "Research",
-            facilities: "Facilities",
-            shipyard: "Shipyard",
-            defence: "Defence",
-            fleet: "Fleet",
-            galaxy: "Galaxy",
-            jumpgate: "Jump gate",
-            title_tooltip: "Remaining Fields",
-            planet: "Planet",
-            moon: "Moon"
         };
     } else if( lang_server == "de" ) {
         lang = {
@@ -100,6 +84,22 @@
             title_tooltip: "Verbleibende Felder",
             planet: "Planeten",
             moon: "Mond"
+        };
+    } else {
+        lang = {
+            overview: "Overview",
+            resources: "Resources",
+            lifeforms: "Life forms",
+            research: "Research",
+            facilities: "Facilities",
+            shipyard: "Shipyard",
+            defence: "Defence",
+            fleet: "Fleet",
+            galaxy: "Galaxy",
+            jumpgate: "Jump gate",
+            title_tooltip: "Remaining Fields",
+            planet: "Planet",
+            moon: "Moon"
         };
     }
 
