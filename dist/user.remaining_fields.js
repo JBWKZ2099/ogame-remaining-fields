@@ -417,7 +417,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <a href='${shortcuts[9] + id_planet}'>[+]</a>
+                            <a href='${shortcuts[10] + id_planet}'>[+]</a>
                             <a href='${shortcuts[1] + id_planet}'>${lang.resources}</a>
                         </td>
                         <td class='value rf-moon-link'>
