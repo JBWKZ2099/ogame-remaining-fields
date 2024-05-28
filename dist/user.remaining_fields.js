@@ -175,7 +175,7 @@
         planet_info[1] = $(el).find(".planet-name").text();
 
         if( $(el).find(".moonlink").length>0 ) {
-            moon = $(el).find(".moonlink").attr("title").split("<b>")[1].split(" [")[0];
+            moon = $(el).find(".moonlink").attr("data-tooltip-title").split("<b>")[1].split(" [")[0];
             planet_info[2] = moon;
         }
 
@@ -227,11 +227,11 @@
 
         /*Comprueba si existe luna"></a>*/
         if( $(this).find("a.moonlink").length ) {
-            var moon_fields = $(this).find("a.moonlink").attr("title").replace("</span>", "").replace("<span class='overmark' >","").replace("<span class='overmark'>",""),
+            var moon_fields = $(this).find("a.moonlink").attr("data-tooltip-title").replace("</span>", "").replace("<span class='overmark' >","").replace("<span class='overmark'>",""),
                 mf_used = parseInt( /\(([^)]+)\)/.exec( moon_fields )[1].split("/")[0] ),
                 mf_all = parseInt( /\(([^)]+)\)/.exec( moon_fields )[1].split("/")[1] ),
                 mf_available = mf_all - mf_used,
-                moon_size = ($( $.parseHTML($(this).find("a.moonlink").attr("title")) )[2].textContent).split("(",)[0].replace(" ", ""); /*Get the Moon Size*/
+                moon_size = ($( $.parseHTML($(this).find("a.moonlink").attr("data-tooltip-title")) )[2].textContent).split("(",)[0].replace(" ", ""); /*Get the Moon Size*/
 
             /* traffic lights colors according to % of remaining fields */
             percent = 0;
