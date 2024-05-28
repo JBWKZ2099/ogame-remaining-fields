@@ -116,7 +116,7 @@
         `https://${uni}-${lang_server+url+pages[9]}&cp=`,
         `https://${uni}-${lang_server+url+pages[10]}&cp=` /*Se actuaiza a la url para que se adapte a la versión 9 del juego (page=ingame&component=resourcesettings)*/
     ];
-    //alert(shortcuts[0]);
+    // alert(shortcuts[0]);
 
     var attr_txt = [
             `<div class='htmlTooltip' style='${( ogameInfinityChecker() ? "" : "width: 200px;" )}'>`,
@@ -276,7 +276,8 @@
 
             var mf_available_str = `
                 <font style="font-size:11px">[</font>${str_color}</font><font style="font-size:11px">/</font><font style="font-size:10px">${mf_all}</font><font style="font-size:11px">]</font>`,
-                id_moon = ( ($(this).html().split("moonlink")[1]).split("cp=")[1] ).split('&quot;')[0];
+                // id_moon = ( ($(this).html().split("moonlink")[1]).split("cp=")[1] ).split('&quot;')[0];
+                id_moon = ( ($(this).html().split("moonlink")[1]).split("cp=")[1] ).split('"')[0];
 
             coord = ( ( ( $(this).html().split("moonlink")[1] ).split("[")[1] ).split("]")[0] ).split(":");
             var has_jumpgate = "";
@@ -549,6 +550,7 @@
             $(this).attr("title", html_title);
 
         $(this).find(".planetlink").attr("title", html_title);
+        debugger;
     });
 
     function ogameInfinityChecker() {
