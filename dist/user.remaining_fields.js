@@ -550,7 +550,6 @@
             $(this).attr("title", html_title);
 
         $(this).find(".planetlink").attr("title", html_title);
-        debugger;
     });
 
     function ogameInfinityChecker() {
