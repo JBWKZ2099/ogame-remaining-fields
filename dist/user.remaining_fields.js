@@ -5,7 +5,7 @@
 // @license         MIT
 // @match           *://*.ogame.gameforge.com/game/*
 // @author          Capt Katana (updated By JBWKZ2099)
-// @version         2.6.5
+// @version         2.6.6
 // @homepageURL     https://github.com/JBWKZ2099/ogame-remaining-fields
 // @updateURL       https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/meta.remaining_fields.js
 // @downloadURL     https://raw.githubusercontent.com/JBWKZ2099/ogame-remaining-fields/master/dist/user.remaining_fields.js
@@ -141,18 +141,17 @@
 
     /*Main Operation*/
     $(".smallplanet").each( function(i, el) {
-        var planet_fields = $(this).find(".planetlink").attr("title").replace("</span>", "").replace("<span class='overmark' >","").replace("<span class='overmark'>",""),
+        var planet_fields = $(this).find(".planetlink").attr("data-tooltip-title").replace("</span>", "").replace("<span class='overmark' >","").replace("<span class='overmark'>",""),
             pf_used = parseInt(/\(([^)]+)\)/.exec( $(this).html() )[1].split("/")[0]),
             pf_all = parseInt(/\(([^)]+)\)/.exec( $(this).html() )[1].split("/")[1]),
             pf_available = pf_all - pf_used,
             planet_info = [],
-            plinfo = $.parseHTML($(this).find(".planetlink").attr("title")),
-            planet_size = (plinfo[2].textContent).split(" (")[0],
-            planet_temp = plinfo[4].textContent,
+            plinfo = $.parseHTML($(this).find(".planetlink").attr("data-tooltip-title")),
+            planet_size = (plinfo[4].textContent).split(" (")[0],
+            planet_temp = plinfo[6].textContent,
             moon,
             lifeform_name = "",
             lifeforms = false;
-
 
         if( global_lf_checker ) {
             lifeforms = true;
